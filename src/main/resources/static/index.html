@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestros Hobbies</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50c878;
+            --accent-color: #ff6b6b;
+            --bg-color: #f7f9fc;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --header-color: #34495e;
+            --desc-color: #5d6d7e;
+        }
+
+        .dark-theme {
+            --primary-color: #6ab0f3;
+            --secondary-color: #68d391;
+            --accent-color: #ff8585;
+            --bg-color: #1a202c;
+            --text-color: #e2e8f0;
+            --card-bg: #2d3748;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --header-color: #81e6d9;
+            --desc-color: #a0aec0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.5s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(80, 200, 120, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--header-color);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            font-weight: 700;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background-color: var(--secondary-color);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .hobby {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            transform-style: preserve-3d;
+        }
+
+        .hobby:hover {
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .hobby img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .hobby:hover img {
+            transform: scale(1.1);
+        }
+
+        .hobby-content {
+            padding: 25px;
+            position: relative;
+            background: linear-gradient(180deg, transparent, var(--card-bg) 20%);
+        }
+
+        .hobby h2 {
+            font-size: 2rem;
+            color: var(--header-color);
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .hobby:hover h2 {
+            color: var(--primary-color);
+        }
+
+        .hobby p {
+            color: var(--desc-color);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .hobby:hover p {
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        .hobby::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--card-bg));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hobby:hover::before {
+            opacity: 1;
+        }
+
+        .student-section {
+            margin-bottom: 50px;
+        }
+
+        .student-name {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 30px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hobby h2 {
+                font-size: 1.8rem;
+            }
+
+            .student-name {
+                font-size: 2rem;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .hobby:nth-child(1) { animation-delay: 0.1s; }
+        .hobby:nth-child(2) { animation-delay: 0.2s; }
+        .hobby:nth-child(3) { animation-delay: 0.3s; }
+        .hobby:nth-child(4) { animation-delay: 0.4s; }
+        .hobby:nth-child(5) { animation-delay: 0.5s; }
+        .hobby:nth-child(6) { animation-delay: 0.6s; }
+        .hobby:nth-child(7) { animation-delay: 0.7s; }
+        .hobby:nth-child(8) { animation-delay: 0.8s; }
+        .hobby:nth-child(9) { animation-delay: 0.9s; }
+        .hobby:nth-child(10) { animation-delay: 1s; }
+
+        .hobby::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hobby:hover::after {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Cambiar Tema</button>
+    <div class="container">
+        <h1>Nuestros Hobbies</h1>
+
+        <div class="student-section">
+            <h2 class="student-name">Estudiante 1</h2>
+            <div class="gallery">
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Leer">
+                    <div class="hobby-content">
+                        <h2>Leer</h2>
+                        <p>Me encanta sumergirme en diferentes mundos a través de los libros. Cada página es una nueva aventura que me permite expandir mi imaginación y conocimiento.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Cocinar">
+                    <div class="hobby-content">
+                        <h2>Cocinar</h2>
+                        <p>La cocina es mi laboratorio creativo. Disfruto experimentando con sabores y creando platos que deleitan a mis seres queridos.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Fotografía">
+                    <div class="hobby-content">
+                        <h2>Fotografía</h2>
+                        <p>Capturar momentos y belleza a través del lente me fascina. La fotografía me permite ver el mundo desde perspectivas únicas.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Senderismo">
+                    <div class="hobby-content">
+                        <h2>Senderismo</h2>
+                        <p>Explorar la naturaleza me conecta con el mundo y conmigo mismo. Cada sendero es una oportunidad para descubrir paisajes impresionantes.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Pintar">
+                    <div class="hobby-content">
+                        <h2>Pintar</h2>
+                        <p>El lienzo es mi espacio de expresión. A través de los colores y las formas, puedo plasmar mis emociones y visión del mundo.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Yoga">
+                    <div class="hobby-content">
+                        <h2>Yoga</h2>
+                        <p>La práctica del yoga me ayuda a encontrar equilibrio entre cuerpo y mente. Es mi forma de relajarme y mantenerme en forma.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Jardinería">
+                    <div class="hobby-content">
+                        <h2>Jardinería</h2>
+                        <p>Cuidar de las plantas me conecta con la naturaleza. Ver crecer lo que he sembrado me llena de satisfacción y paciencia.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Tocar guitarra">
+                    <div class="hobby-content">
+                        <h2>Tocar guitarra</h2>
+                        <p>La música es mi lenguaje emocional. Tocar la guitarra me permite expresarme y relajarme después de un largo día.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Ajedrez">
+                    <div class="hobby-content">
+                        <h2>Ajedrez</h2>
+                        <p>El ajedrez desafía mi mente y mejora mi capacidad de estrategia. Cada partida es un nuevo reto intelectual.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Viajar">
+                    <div class="hobby-content">
+                        <h2>Viajar</h2>
+                        <p>Descubrir nuevos lugares y culturas amplía mis horizontes. Viajar me permite crecer como persona y crear recuerdos inolvidables.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="student-section">
+            <h2 class="student-name">Estudiante 2</h2>
+            <div class="gallery">
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Programar">
+                    <div class="hobby-content">
+                        <h2>Programar</h2>
+                        <p>La programación me permite crear y resolver problemas. Disfruto dando vida a mis ideas a través del código.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Correr">
+                    <div class="hobby-content">
+                        <h2>Correr</h2>
+                        <p>Correr me da una sensación de libertad y me ayuda a mantenerme en forma. Cada carrera es un desafío personal.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Dibujar cómics">
+                    <div class="hobby-content">
+                        <h2>Dibujar cómics</h2>
+                        <p>Crear historias visuales me permite combinar mi amor por el arte y la narrativa. Cada viñeta es una ventana a un mundo imaginario.</p>
+                    </div>
+                </div>
+                <div class="hobby"><div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Aprender idiomas">
+                    <div class="hobby-content">
+                        <h2>Aprender idiomas</h2>
+                        <p>Cada nuevo idioma es una puerta a una cultura diferente. Me fascina poder comunicarme con personas de todo el mundo.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Astronomía amateur">
+                    <div class="hobby-content">
+                        <h2>Astronomía amateur</h2>
+                        <p>Observar las estrellas me conecta con el universo. Descubrir los secretos del cosmos es una experiencia que me maravilla constantemente.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Escribir poesía">
+                    <div class="hobby-content">
+                        <h2>Escribir poesía</h2>
+                        <p>La poesía me permite expresar mis pensamientos más profundos. Cada verso es una exploración de mis emociones y percepciones.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Escalada en roca">
+                    <div class="hobby-content">
+                        <h2>Escalada en roca</h2>
+                        <p>La escalada desafía mis límites físicos y mentales. Superar cada ruta me da una sensación increíble de logro.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Origami">
+                    <div class="hobby-content">
+                        <h2>Origami</h2>
+                        <p>El arte del plegado de papel me enseña paciencia y precisión. Crear figuras complejas a partir de un simple papel es fascinante.</p>
+                    </div>
+                </div>
+                <div class="hobby">
+                    <img src="/api/placeholder/400/250" alt="Meditación">
+                    <div class="hobby-content">
+                        <h2>Meditación</h2>
+                        <p>La meditación me ayuda a encontrar paz interior y claridad mental. Es mi forma de recargar energías y mantener el equilibrio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = document.body.classList.contains('dark-theme') ? 'Tema Claro' : 'Tema Oscuro';
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.hobby').forEach(hobby => {
+            observer.observe(hobby);
+        });
+
+        // Use a single event listener for the gallery
+        const galleries = document.querySelectorAll('.gallery');
+        galleries.forEach(gallery => {
+            gallery.addEventListener('mousemove', (e) => {
+                const hobby = e.target.closest('.hobby');
+                if (!hobby) return;
+
+                const rect = hobby.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                hobby.style.setProperty('--mouse-x', `${x}px`);
+                hobby.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>
